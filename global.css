@@ -1,0 +1,112 @@
+:root {
+  /* 主色调 */
+  --primary-color: #1890ff;
+  --primary-light: #e6f7ff;
+  --primary-dark: #096dd9;
+  /* 辅助色 */
+  --success-color: #52c41a;
+  --warning-color: #faad14;
+  --error-color: #ff4d4f;
+  /* 中性色 */
+  --text-primary: rgba(0, 0, 0, 0.85);
+  --text-secondary: rgba(0, 0, 0, 0.65);
+  --text-tertiary: rgba(0, 0, 0, 0.45);
+  --bg-light: #f5f5f5;
+  --border-color: #e8e8e8;
+  /* 尺寸变量 */
+  --border-radius: 8px;
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* 全局重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+  color: var(--text-primary);
+  background-color: var(--bg-light);
+  line-height: 1.5;
+  cursor: default;
+  user-select: none;
+}
+
+/* 通用组件样式 */
+.van-button--primary {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+/* 加入队伍按钮特殊样式 */
+body #teamCardList .van-button.van-button--primary.van-button--plain {
+  --van-button-plain-text-color: #002766 !important;
+  --van-button-plain-border-color: #003a8c !important;
+  --van-button-plain-background-color: #e6f7ff !important;
+  color: #002766 !important;
+  border-color: #003a8c !important;
+  border-width: 4px !important;
+  font-weight: 800 !important;
+  background-color: #e6f7ff !important;
+  box-shadow: none !important;
+}
+
+.van-button--primary:hover {
+  background-color: var(--primary-dark) !important;
+  border-color: var(--primary-dark) !important;
+}
+
+.van-cell {
+  background-color: #fff !important;
+}
+
+/* 卡片组件样式 */
+.card-container {
+  border-radius: var(--border-radius);
+  background-color: #fff;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* 原有按钮样式保留并优化 */
+.add-button {
+  position: fixed;
+  bottom: 60px;
+  width: 56px;
+  right: 24px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(24, 144, 255, 0.45);
+}
+
+/* 表单输入元素光标样式 */
+input, textarea, select, [contenteditable] {
+  cursor: text;
+  user-select: text;
+}
+
+/* 交互元素光标样式 */
+button, a, .van-button, .van-icon, .van-switch, .van-tab, .van-checkbox, .van-radio {
+  cursor: pointer;
+}
