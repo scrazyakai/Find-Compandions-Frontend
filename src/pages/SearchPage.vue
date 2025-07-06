@@ -88,9 +88,9 @@ const onSearch = () => {
   console.log('搜索内容:', searchText.value);
 };
 
-// 取消搜索
+// 取消搜索，跳转到首页
 const onCancel = () => {
-  searchText.value = '';
+  router.push('/');
 };
 
 // 切换标签选中状态

@@ -14,7 +14,7 @@
           </template>
 
         <template #tags>
-          <van-tag :type="tag === '男' ? 'info' : tag === '女' ? 'danger' : 'primary'" v-for="tag in user.tags" :key="tag" style="margin-right: 6px; margin-top: 6px; padding: 2px 8px; font-size: 12px">
+          <van-tag :type="tag === '男' ? 'info' : tag === '女' ? 'danger' : 'primary'" v-for="tag in user.tags" :key="tag" style="margin-right: 8px; margin-top: 8px; padding: 3px 10px; font-size: 14px">
             {{ tag }}
           </van-tag>
         </template>
@@ -44,10 +44,10 @@ console.log('UserCardList props.userList:', props.userList);
 
 <style scoped>
 /* 修复头像区域光标问题 */
-.van-card { cursor: default; user-select: none; background-color: #fff !important; border-radius: 16px !important; border: none; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); transition: transform 0.2s ease; }
+.van-card { cursor: default; user-select: none; background-color: #fff !important; border-radius: 16px !important; border: none; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); transition: transform 0.2s ease; padding: 20px; min-height: 160px; }
 .van-card:hover { transform: translateY(-3px); }
-.van-card__thumb img { pointer-events: none; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); border: 2px solid #fff; border-radius: 50%; margin: 6px; width: 60px; height: 60px; object-fit: cover; }
-.card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; padding: 16px; }
+.van-card__thumb img { pointer-events: none; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); border: 2px solid #fff; border-radius: 50%; margin: 6px; width: 80px; height: 80px; object-fit: cover; }
+.card-grid { display: grid; grid-template-columns: 1fr; gap: 20px; padding: 0 16px 16px; }
 @media (max-width: 768px) { .card-grid { grid-template-columns: 1fr; } }
 .card-item { width: 100%; }
 .van-card__title { font-weight: 600; color: #333; }

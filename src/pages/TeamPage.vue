@@ -1,6 +1,12 @@
 <template>
-  <div id="teamPage" class="team-page-container">
-    <van-search v-model="searchText" placeholder="搜索队伍名称" @search="searchTeam" class="search-bar" />
+  <div id="teamPage" class="container">
+    <van-search
+  v-model="searchText"
+  placeholder="搜索队伍名称"
+  @search="onSearch"
+  class="search-bar"
+  action-text="搜索"
+/>
     <van-tabs v-model:active="active" @change="onTabChange">
       <van-tab title="公开" name="public" />
       <van-tab title="加密" name="private" />
@@ -106,17 +112,44 @@ const onSearch = (val) => {
   padding: 0;
 }
 /* 队伍页面容器样式 */
-.team-page-container {
+.container {
   padding: 16px;
 }
 
 /* 搜索栏样式 */
 .search-bar {
   margin-bottom: 16px;
-  background-color: #fff;
-  border-radius: var(--border-radius);
-  padding: 8px 16px;
-  box-shadow: var(--card-shadow);
+  background: #fff;
+  border: 2px solid #1677ff;
+  border-radius: 20px;
+  padding: 0 8px;
+  box-shadow: 0 2px 8px rgba(22,119,255,0.04);
+  transition: border 0.2s;
+}
+
+/* 输入内容区去掉边框，保持白色 */
+.search-bar :deep(.van-search__content) {
+  background: #fff !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 20px !important;
+}
+
+/* 搜索按钮蓝色风格 */
+.search-bar :deep(.van-search__action) {
+  color: #fff !important;
+  background: #1677ff !important;
+  border-radius: 16px !important;
+  padding: 4px 16px !important;
+  margin-right: 4px;
+  font-size: 15px;
+  transition: background 0.2s;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(22,119,255,0.08);
+  cursor: pointer;
+}
+.search-bar :deep(.van-search__action):hover {
+  background: #1563c7 !important;
 }
 
 /* 队伍卡片列表样式 */
