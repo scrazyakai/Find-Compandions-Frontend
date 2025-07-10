@@ -2,12 +2,15 @@
   <div class="pc-layout">
 
     <main class="pc-content container">
+      <div class="content-inner">
         <router-view/>
-      </main>
+      </div>
+    </main>
     <!-- 底部Tabbar放在根div内，保证只有一个根节点 -->
-    <van-tabbar route>
+    <van-tabbar route v-if="route.path !== '/groupChat'">
       <van-tabbar-item to="/" icon="home-o">主页</van-tabbar-item>
-      <van-tabbar-item to="/message" icon="chat-o">消息</van-tabbar-item>
+      <van-tabbar-item to="/message" icon="chat-o">好友列表</van-tabbar-item>
+      <van-tabbar-item to="/groupChat" icon="chat-o">聊天厅</van-tabbar-item>
       <van-tabbar-item to="/team" icon="search">队伍</van-tabbar-item>
       <van-tabbar-item to="/user" icon="friends-o">个人</van-tabbar-item>
     </van-tabbar>
@@ -16,6 +19,8 @@
 
 <script setup lang="ts">
 // PC端布局无需移动端导航逻辑
+import { useRoute } from 'vue-router'
+const route = useRoute()
 </script>
 
 <style scoped>
@@ -65,5 +70,15 @@
   max-width: 1200px;
   margin: 32px auto 0 auto;
   background: none;
+}
+.content-inner {
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  padding: 24px;
+  padding-bottom: 100px;
+}
+:deep(.van-tabbar) {
+  z-index: 9999 !important;
 }
 </style>

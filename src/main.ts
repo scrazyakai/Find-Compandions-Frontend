@@ -1,10 +1,12 @@
 import {createApp} from 'vue'
+import router from './router';
 import App from './App.vue'
 import * as VueRouter from 'vue-router';
 import routes from "./config/route";
 import Vant from 'vant';
 import 'vant/lib/index.css';
 import '../global.css'
+import { setCurrentUserState } from './states/user';
 
 const app = createApp(App);
 app.use(Vant);
@@ -16,4 +18,21 @@ const router = VueRouter.createRouter({
 })
 
 app.use(router);
-app.mount('#app')
+
+const userStr = localStorage.getItem('user');
+if (userStr) {
+  setCurrentUserState(JSON.parse(userStr));
+}
+
+const formatTime = (dateStr) => {
+  const date = new Date(dateStr)
+  // 直接用UTC时间
+  return date.getUTCFullYear() + '/' +
+         (date.getUTCMonth() + 1) + '/' +
+         date.getUTCDate() + ' ' +
+         date.getUTCHours() + ':' +
+         String(date.getUTCMinutes()).padStart(2, '0') + ':' +
+         String(date.getUTCSeconds()).padStart(2, '0')
+}
+
+app.use(router).mount('#app')

@@ -13,7 +13,8 @@ import UserRegisterPage from "@/pages/UserRegisterPage.vue";
 import UserTagSelectPage from "@/pages/UserTagSelectPage.vue";
 import TeamAddPage from "../pages/TeamAddPage.vue";
 import TeamUpdatePage from "../pages/TeamUpdatePage.vue";
-
+import MessagePage from '../pages/MessagePage.vue';
+import UserEditTagsPage from "../pages/UserEditTagsPage.vue";
 
 const routes = [
     { path: '/', component: Index, meta: { showBackButton: false } },
@@ -31,6 +32,7 @@ const routes = [
     { path: '/user/update', title: '更新信息', component: UserUpdatePage, meta: { backPath: '/user' } },
     { path: '/user/team/join', title: '加入队伍', component: UserTeamJoinPage, meta: { backPath: '/user' } },
     { path: '/user/team/create', title: '创建队伍', component: UserTeamCreatePage, meta: { backPath: '/user' } },
+    { path: '/groupChat', title: '聊天厅', component: () => import('../pages/GroupChatPage.vue'), meta: { showTabbar: true } },
 ]
 
 export default routes;
