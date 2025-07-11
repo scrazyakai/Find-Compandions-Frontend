@@ -5,11 +5,11 @@
       <div class="content-inner">
         <router-view/>
       </div>
-    </main>
+      </main>
     <!-- 底部Tabbar放在根div内，保证只有一个根节点 -->
     <van-tabbar route v-if="route.path !== '/groupChat'">
       <van-tabbar-item to="/" icon="home-o">主页</van-tabbar-item>
-      <van-tabbar-item to="/message" icon="chat-o">好友列表</van-tabbar-item>
+      <van-tabbar-item to="/message" icon="chat-o" @click="goToFriends">好友列表</van-tabbar-item>
       <van-tabbar-item to="/groupChat" icon="chat-o">聊天厅</van-tabbar-item>
       <van-tabbar-item to="/team" icon="search">队伍</van-tabbar-item>
       <van-tabbar-item to="/user" icon="friends-o">个人</van-tabbar-item>
@@ -21,6 +21,10 @@
 // PC端布局无需移动端导航逻辑
 import { useRoute } from 'vue-router'
 const route = useRoute()
+
+const goToFriends = () => {
+  window.location.href = 'http://localhost:3000/friends';
+}
 </script>
 
 <style scoped>
