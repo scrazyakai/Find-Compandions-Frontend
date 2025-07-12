@@ -55,7 +55,7 @@
           <van-icon name="user-o" class="list-icon" />
           <span class="list-title">找到的学习伙伴</span>
         </div>
-  <user-card-list :user-list="userList" />
+  <user-card-list :user-list="userList" @contact="handleContactUser" />
       </div>
 
       <!-- 空状态 -->
@@ -102,9 +102,11 @@
 import {onMounted, ref} from 'vue';
 import {useRoute} from "vue-router";
 import myAxios from "../plugins/myAxios";
-import {Toast} from "vant";
+import {Toast, Dialog} from "vant";
 import qs from 'qs';
 import UserCardList from "../components/UserCardList.vue";
+import {UserType} from "../models/user";
+import { sendFriendRequest } from "../services/friendService";
 
 const route = useRoute();
 const {tags} = route.query;
@@ -152,6 +154,56 @@ const loadUserList = async () => {
 const refreshResults = () => {
   loadUserList();
 }
+
+/**
+ * 处理联系用户事件
+ */
+const handleContactUser = async (user: UserType) => {
+  try {
+    // 确认发送好友请求
+    await Dialog.confirm({
+      title: '发送好友申请',
+      message: `确定要向 ${user.username} 发送好友申请吗？`,
+      confirmButtonText: '发送',
+      cancelButtonText: '取消',
+    });
+    
+    // 发送好友请求
+    const result = await sendFriendRequest({
+      fromUserId: getCurrentUserId(), // 发送方ID
+      toUserId: user.id, // 接收方ID
+      sendTime: new Date()
+    });
+    
+    if (result) {
+      Toast.success('好友申请发送成功');
+    } else {
+      Toast.fail('发送好友申请失败，请稍后再试');
+    }
+  } catch (error: any) {
+    if (error !== 'cancel') {
+      console.error('发送好友申请失败:', error);
+      Toast.fail('发送好友申请失败，请稍后再试');
+    }
+  }
+};
+
+/**
+ * 获取当前用户ID
+ */
+const getCurrentUserId = (): number => {
+  // 从本地存储或状态管理中获取当前用户ID
+  const userStr = localStorage.getItem('user');
+  if (userStr) {
+    try {
+      const user = JSON.parse(userStr);
+      return user.id;
+    } catch (e) {
+      console.error('获取用户信息失败:', e);
+    }
+  }
+  return 0; // 返回默认值
+};
 
 onMounted(() => {
   loadUserList();

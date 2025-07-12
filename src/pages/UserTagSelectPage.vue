@@ -87,7 +87,7 @@ const genderTags = [
 const gradeTags = ['大一', '大二', '大三', '大四'];
 
 // 编程语言选项（可多选）
-const languageTags = ['Java', 'Python', 'C++', 'C', '其他'];
+const languageTags = ['Java', 'Python', 'C++', 'C', 'JavaScript', 'Rust', 'Go', 'PHP', 'TypeScript', '其他'];
 
 // 已选标签状态
 const activeTags = ref<string[]>([]);

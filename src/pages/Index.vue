@@ -60,11 +60,34 @@
           :user-list="userList" 
           :loading="loading" 
           :is-match-mode="isMatchMode" 
+          @contact="handleContactUser"
           class="user-card-list"
         />
         
+        <!-- 错误状态 -->
+        <div v-if="error && !loading" class="error-state">
+          <van-empty 
+            description="加载失败" 
+            image="error"
+          >
+            <template #description>
+              <div class="error-description">
+                <p>{{ error }}</p>
+                <van-button 
+                  type="primary" 
+                  size="small" 
+                  @click="loadData"
+                  class="retry-btn"
+                >
+                  重试
+                </van-button>
+              </div>
+            </template>
+          </van-empty>
+        </div>
+        
         <!-- 空状态 -->
-        <div v-if="!userList || userList.length < 1" class="empty-state">
+        <div v-else-if="!loading && (!userList || userList.length < 1)" class="empty-state">
           <van-empty 
             description="暂无用户数据" 
             image="https://cdn.jsdelivr.net/gh/vantjs/vant@dev/packages/vant/src/empty/local.png"
@@ -88,12 +111,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import myAxios from "../plugins/myAxios";
-import {Toast} from "vant";
+import {Toast, Dialog} from "vant";
 import UserCardList from "../components/UserCardList.vue";
 import {UserType} from "../models/user";
+import { sendFriendRequest } from "../services/friendService";
 
 const route = useRoute();
 const router = useRouter();
@@ -105,61 +129,125 @@ const goToSearch = () => {
 
 const userList = ref([]);
 const loading = ref(true);
+const error = ref<string | null>(null);
 
 /**
  * 加载数据
  */
 const loadData = async () => {
-  let userListData;
-  loading.value = true;
-  // 心动模式，根据标签匹配用户
-  if (isMatchMode.value) {
-    const num = 10;
-    userListData = await myAxios.get('/user/match', {
-      params: {
-        num,
-      },
-    })
-        .then(function (response) {
-          console.log('/user/match succeed', response);
-          return response?.data;
-        })
-        .catch(function (error) {
-          console.error('/user/match error', error);
-          Toast.fail('请求失败');
-        })
-  } else {
-    // 普通模式，直接分页查询用户
-    userListData = await myAxios.get('/user/recommend', {
-      params: {
-        pageSize: 8,
-        pageNum: 1,
-        tags: route.query.tags
-      },
-    })
-        .then(function (response) {
-          console.log('/user/recommend succeed', response);
-          return response?.data?.records;
-        })
-        .catch(function (error) {
-          console.error('/user/recommend error', error);
-          Toast.fail('请求失败');
-        })
-  }
-  if (userListData) {
-    userListData.forEach((user: UserType) => {
-      if (user.tags) {
-        user.tags = JSON.parse(user.tags);
+  try {
+    loading.value = true;
+    error.value = null;
+    let userListData;
+    
+    // 心动模式，根据标签匹配用户
+    if (isMatchMode.value) {
+      const response = await myAxios.get('/user/match', {
+        params: { num: 10 },
+      });
+      
+      if (response.code === 0) {
+        userListData = response.data;
+      } else {
+        throw new Error(response.message || '获取匹配用户失败');
       }
-    })
-    userList.value = userListData;
+    } else {
+      // 普通模式，直接分页查询用户
+      const response = await myAxios.get('/user/recommend', {
+        params: {
+          pageSize: 8,
+          pageNum: 1,
+          tags: route.query.tags
+        },
+      });
+      
+      if (response.code === 0) {
+        userListData = response.data?.records;
+      } else {
+        throw new Error(response.message || '获取推荐用户失败');
+      }
+    }
+    
+    // 处理用户数据
+    if (userListData && Array.isArray(userListData)) {
+      userListData.forEach((user: UserType) => {
+        if (user.tags && typeof user.tags === 'string') {
+          try {
+            user.tags = JSON.parse(user.tags);
+          } catch (e) {
+            console.warn('解析用户标签失败:', e);
+            user.tags = [];
+          }
+        }
+      });
+      userList.value = userListData;
+    } else {
+      userList.value = [];
+    }
+  } catch (err: any) {
+    console.error('加载数据失败:', err);
+    error.value = err.message || '网络请求失败，请检查网络连接';
+    Toast.fail(error.value);
+    userList.value = [];
+  } finally {
+    loading.value = false;
   }
-  loading.value = false;
 }
 
-watchEffect(() => {
+/**
+ * 处理联系用户事件
+ */
+const handleContactUser = async (user: UserType) => {
+  try {
+    // 确认发送好友请求
+    await Dialog.confirm({
+      title: '发送好友申请',
+      message: `确定要向 ${user.username} 发送好友申请吗？`,
+      confirmButtonText: '发送',
+      cancelButtonText: '取消',
+    });
+    
+    // 发送好友请求
+    const result = await sendFriendRequest({
+      fromUserId: getCurrentUserId(), // 发送方ID
+      toUserId: user.id, // 接收方ID
+      sendTime: new Date()
+    });
+    
+    if (result) {
+      Toast.success('好友申请发送成功');
+    } else {
+      Toast.fail('发送好友申请失败，请稍后再试');
+    }
+  } catch (error: any) {
+    if (error !== 'cancel') {
+      console.error('发送好友申请失败:', error);
+      Toast.fail('发送好友申请失败，请稍后再试');
+    }
+  }
+};
+
+/**
+ * 获取当前用户ID
+ */
+const getCurrentUserId = (): number => {
+  // 从本地存储或状态管理中获取当前用户ID
+  const userStr = localStorage.getItem('user');
+  if (userStr) {
+    try {
+      const user = JSON.parse(userStr);
+      return user.id;
+    } catch (e) {
+      console.error('获取用户信息失败:', e);
+    }
+  }
+  return 0; // 返回默认值
+};
+
+// 监听心动模式变化，当模式切换时重新加载数据
+watch(isMatchMode, () => {
   loadData();
-})
+}, { immediate: true })
 
 </script>
 
@@ -379,23 +467,35 @@ watchEffect(() => {
   border-radius: 2px;
 }
 
-/* 空状态样式 */
-.empty-state {
+/* 空状态和错误状态样式 */
+.empty-state,
+.error-state {
   margin-top: 40px;
   text-align: center;
 }
 
-.empty-description {
+.empty-description,
+.error-description {
   color: #666;
 }
 
-.empty-description p {
+.empty-description p,
+.error-description p {
   margin: 8px 0;
 }
 
 .empty-tip {
   font-size: 14px;
   color: #999;
+}
+
+.error-description {
+  color: #ff4757;
+}
+
+.retry-btn {
+  margin-top: 12px;
+  border-radius: 20px;
 }
 
 /* 底部装饰 */

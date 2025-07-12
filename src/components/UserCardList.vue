@@ -120,19 +120,22 @@ const handleViewDetail = (user: UserType) => {
   transition: all 0.3s ease;
 }
 
-/* 卡片样式 */
+/* 卡片样式 - 性能优化版 */
 .van-card {
   cursor: default;
   user-select: none;
-  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  background: #fff;
   border-radius: 20px !important;
   border: 1px solid #e9ecef;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   padding: 24px;
   min-height: 180px;
   position: relative;
   overflow: hidden;
+  /* 性能优化 */
+  contain: layout style paint;
+  will-change: transform;
 }
 
 .van-card::before {
@@ -148,29 +151,29 @@ const handleViewDetail = (user: UserType) => {
 }
 
 .van-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
 }
 
 .van-card:hover::before {
   opacity: 1;
 }
 
-/* 头像样式 */
+/* 头像样式 - 简化动画 */
 .van-card__thumb img {
   pointer-events: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid #fff;
   border-radius: 50%;
   margin: 6px;
   width: 90px;
   height: 90px;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease;
 }
 
 .van-card:hover .van-card__thumb img {
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 
 /* 标题样式 */
@@ -194,7 +197,7 @@ const handleViewDetail = (user: UserType) => {
 }
 
 .admin-tag {
-  background: linear-gradient(135deg, #ff4757 0%, #ff3838 100%);
+  background: #ff4757;
   color: white;
   padding: 4px 8px;
   border-radius: 12px;
@@ -203,13 +206,7 @@ const handleViewDetail = (user: UserType) => {
   display: flex;
   align-items: center;
   gap: 4px;
-  animation: shimmer 2s infinite;
-}
-
-@keyframes shimmer {
-  0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.3); }
-  50% { box-shadow: 0 0 0 8px rgba(255, 71, 87, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
+  /* 移除复杂动画，提升性能 */
 }
 
 /* 标签容器 */
@@ -299,14 +296,10 @@ const handleViewDetail = (user: UserType) => {
   60% { transform: translateY(-2px); }
 }
 
+/* 移除标签的脉冲动画，减少CPU占用 */
 .match-mode-card .user-tag {
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  /* 静态样式，性能更好 */
+  box-shadow: 0 2px 4px rgba(255, 71, 87, 0.2);
 }
 
 /* 响应式优化 */
@@ -359,11 +352,7 @@ const handleViewDetail = (user: UserType) => {
   }
 }
 
-/* 为不同索引的卡片添加延迟 */
-.card-item:nth-child(1) { animation-delay: 0.1s; }
-.card-item:nth-child(2) { animation-delay: 0.2s; }
-.card-item:nth-child(3) { animation-delay: 0.3s; }
-.card-item:nth-child(4) { animation-delay: 0.4s; }
-.card-item:nth-child(5) { animation-delay: 0.5s; }
-.card-item:nth-child(6) { animation-delay: 0.6s; }
+/* 简化延迟动画，减少重绘 */
+.card-item:nth-child(odd) { animation-delay: 0.1s; }
+.card-item:nth-child(even) { animation-delay: 0.2s; }
 </style>

@@ -16,6 +16,7 @@ import TeamUpdatePage from "../pages/TeamUpdatePage.vue";
 import MessagePage from '../pages/MessagePage.vue';
 import UserEditTagsPage from "../pages/UserEditTagsPage.vue";
 import FriendsPage from '../pages/FriendsPage.vue';
+import ChatPage from '../pages/ChatPage.vue';
 
 const routes = [
     { path: '/', component: Index, meta: { showBackButton: false } },
@@ -35,6 +36,7 @@ const routes = [
     { path: '/user/team/create', title: '创建队伍', component: UserTeamCreatePage, meta: { backPath: '/user' } },
     { path: '/groupChat', title: '聊天厅', component: () => import('../pages/GroupChatPage.vue'), meta: { showTabbar: true } },
     { path: '/friends', title: '好友列表', component: FriendsPage },
+    { path: '/chat', title: '私聊', component: ChatPage, meta: { showTabbar: false } },
 ]
 
 export default routes;

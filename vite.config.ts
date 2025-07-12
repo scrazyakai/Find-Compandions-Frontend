@@ -12,5 +12,20 @@ export default defineConfig({
     },
     plugins: [vue(), styleImport({
         resolves: [VantResolve()],
-    }),]
+    }),],
+    server: {
+        proxy: {
+            '/api': {
+                target: 'http://localhost:8080',
+                changeOrigin: true,
+                secure: false,
+                rewrite: (path) => path,
+                configure: (proxy, options) => {
+                    proxy.on('proxyReq', (proxyReq, req, res) => {
+                        console.log('代理请求:', req.method, req.url, '->', options.target + req.url);
+                    });
+                }
+            }
+        }
+    }
 })
