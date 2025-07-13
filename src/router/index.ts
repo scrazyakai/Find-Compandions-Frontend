@@ -13,4 +13,15 @@ const router = createRouter({
   routes,
 });
 
+// 全局路由守卫，未登录用户跳转到登录页
+router.beforeEach((to, from, next) => {
+  const whiteList = ['/user/login', '/register'];
+  const userStr = localStorage.getItem('user');
+  if (!whiteList.includes(to.path) && !userStr) {
+    next('/user/login');
+  } else {
+    next();
+  }
+});
+
 export default router;
