@@ -1,10 +1,8 @@
 import axios, {AxiosInstance} from "axios";
 import { ApiResponse, ApiErrorCode } from '../types/api';
 
-const isDev = process.env.NODE_ENV === 'development';
-
 const myAxios: AxiosInstance = axios.create({
-    baseURL: isDev ? '/api' : '线上地址',
+    baseURL: import.meta.env.VITE_API_URL,
 });
 
 myAxios.defaults.withCredentials = true; // 配置为true
