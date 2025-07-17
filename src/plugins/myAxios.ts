@@ -2,7 +2,8 @@ import axios, { AxiosInstance } from "axios";
 import { ApiResponse, ApiErrorCode } from '../types/api';
 
 const myAxios: AxiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
+    baseURL: 'https://api.findcompanions.xyz/api',
+    withCredentials: false // 如果需要 cookie，则为 true
 });
 
 myAxios.defaults.withCredentials = true; // 配置为true
