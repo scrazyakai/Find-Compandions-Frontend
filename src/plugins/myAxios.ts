@@ -3,7 +3,7 @@ import { ApiResponse, ApiErrorCode } from '../types/api';
 
 const myAxios: AxiosInstance = axios.create({
     baseURL: 'https://api.findcompanions.xyz/api',
-    withCredentials: false // 如果需要 cookie，则为 true
+    withCredentials: true // 如果需要 cookie，则为 true
 });
 
 myAxios.defaults.withCredentials = true; // 配置为true
