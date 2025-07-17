@@ -134,6 +134,7 @@
 import { ref, onMounted, nextTick, computed } from 'vue'
 import myAxios from '../plugins/myAxios'
 import { getCurrentUserState } from '../states/user'
+import { useRouter } from 'vue-router'
 
 // 消息数据类型定义
 interface ChatGroupVO {
@@ -154,6 +155,7 @@ const emojiCategory = ref('smileys')
 const user = getCurrentUserState()
 const currentUserId = user?.id
 const chatHistory = ref<HTMLElement>()
+const router = useRouter()
 
 // 表情包数据
 const emojiCategories = ref({
@@ -266,7 +268,7 @@ const formatTime = (dateStr: string) => {
 
 // 返回按钮点击事件
 const goBack = () => {
-  window.location.href = 'http://localhost:3000/'
+  router.push('/');
 }
 
 // 组件挂载时获取历史消息

@@ -19,11 +19,12 @@
 
 <script setup lang="ts">
 // PC端布局无需移动端导航逻辑
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
+const router = useRouter()
 
 const goToFriends = () => {
-  window.location.href = 'http://localhost:3000/friends';
+  router.push('/friends');
 }
 </script>
 
